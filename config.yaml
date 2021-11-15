@@ -1,0 +1,6 @@
+login:
+  file: ./scripts/login.json
+  actionDelayTime: 1
+playback:
+  file: ./scripts/record.json
+  actionDelayTime: 2

@@ -35,7 +35,7 @@ func Run(config Config) {
 func runScript(ctx context.Context, config *ScriptConfig) {
 	script := LoadScript(config)
 
-	if err := chromedp.Run(ctx, chromedp.Navigate(script.StartUrl)); err != nil {
+	if err := chromedp.Run(ctx, chromedp.Navigate(script.Url(script.StartUrl))); err != nil {
 		panic(err)
 	}
 	time.Sleep(time.Duration(config.ActionDelayTime) * time.Second)
@@ -47,7 +47,7 @@ func runScript(ctx context.Context, config *ScriptConfig) {
 			panic(err)
 		}
 		for _, target := range targets {
-			if target.URL == action.TabUrl {
+			if target.URL == script.Url(action.TabUrl) {
 				targetCtx, _ = chromedp.NewContext(ctx, chromedp.WithTargetID(target.TargetID))
 				break
 			}

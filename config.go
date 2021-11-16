@@ -2,9 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"regexp"
+	"strconv"
 )
 
 type Config struct {
@@ -18,8 +21,16 @@ type ScriptConfig struct {
 }
 
 type Script struct {
-	StartUrl string         `json:"startUrl"`
-	Actions  []ScriptAction `json:"actions"`
+	Actions     []ScriptAction `json:"actions"`
+	StartUrl    string         `json:"startUrl"`
+	UrlPrefixes []string       `json:"urlPrefixes"`
+}
+
+func (s Script) Url(url string) string {
+	var compRegEx = regexp.MustCompile(`^{(\d+?)}(.*)$`)
+	match := compRegEx.FindStringSubmatch(url)
+	prefixIdx, _ := strconv.Atoi(match[1])
+	return fmt.Sprintf("%s%s", s.UrlPrefixes[prefixIdx], match[2])
 }
 
 type ScriptAction struct {
